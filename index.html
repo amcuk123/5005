@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
 </head>
 <body>
 
@@ -21,7 +22,6 @@
                 <h2>5005 SERVICES</h2>
             </div>
             <p class="subtitle">Sisteme erişmek için bilgilerinizi girin</p>
-            
             <form id="loginForm" onsubmit="handleLogin(event)">
                 <div class="input-group">
                     <i class="fa-solid fa-user"></i>
@@ -38,19 +38,12 @@
     </div>
 
     <div id="panelWrapper" class="panel-container hidden">
-        
         <aside class="sidebar">
             <div class="sidebar-header">
-                <div class="brand">
-                    <i class="fa-solid fa-bolt neon-text"></i>
-                    <span>5005</span>
-                </div>
+                <div class="brand"><i class="fa-solid fa-bolt neon-text"></i><span>5005</span></div>
             </div>
-            
             <div class="user-profile">
-                <div class="avatar-wrapper">
-                    <img src="https://via.placeholder.com/50/a855f7/ffffff?text=5005" alt="Avatar">
-                </div>
+                <div class="avatar-wrapper"><img src="https://via.placeholder.com/50/a855f7/ffffff?text=5005" alt="Avatar"></div>
                 <div class="user-info">
                     <h4 id="displayUsername">gaplumgaplum</h4>
                     <span id="userRoleBadge" class="role-badge">Üye</span>
@@ -59,14 +52,11 @@
             </div>
 
             <nav class="sidebar-menu">
-                <a href="#" onclick="switchTab('dashboard')" id="menu-dashboard" class="menu-item active">
-                    <i class="fa-solid fa-house"></i> Ana Sayfa
-                </a>
+                <a href="#" onclick="switchTab('dashboard')" id="menu-dashboard" class="menu-item active"><i class="fa-solid fa-house"></i> Ana Sayfa</a>
                 
                 <div class="menu-dropdown">
                     <div class="menu-item" onclick="toggleDropdown()">
-                        <i class="fa-solid fa-phone"></i> Telefon Çözümleri 
-                        <i class="fa-solid fa-chevron-down arrow" id="dropdownArrow"></i>
+                        <i class="fa-solid fa-phone"></i> Telefon Çözümleri <i class="fa-solid fa-chevron-down arrow" id="dropdownArrow"></i>
                     </div>
                     <div class="sub-nav hidden" id="phoneSubNav">
                         <a href="#" onclick="switchTab('tc-gsm')" id="menu-tc-gsm" class="sub-item">• TC - GSM</a>
@@ -74,18 +64,14 @@
                     </div>
                 </div>
 
-                <a href="#" onclick="switchTab('owner-panel')" id="menu-owner" class="menu-item owner-only-element hidden">
-                    <i class="fa-solid fa-lock"></i> Owner Kontrol
-                </a>
-                
-                <a href="#" onclick="handleLogout()" class="menu-item logout" style="margin-top: auto;">
-                    <i class="fa-solid fa-right-from-bracket"></i> Çıkış Yap
-                </a>
+                <a href="#" onclick="switchTab('plaka-sorgu')" id="menu-plaka" class="menu-item"><i class="fa-solid fa-car"></i> Plaka Çözümleri</a>
+
+                <a href="#" onclick="switchTab('owner-panel')" id="menu-owner" class="menu-item owner-only-element hidden"><i class="fa-solid fa-lock"></i> Owner Kontrol</a>
+                <a href="#" onclick="handleLogout()" class="menu-item logout" style="margin-top: auto;"><i class="fa-solid fa-right-from-bracket"></i> Çıkış Yap</a>
             </nav>
         </aside>
 
         <main class="main-content">
-            
             <header class="top-header">
                 <div class="header-title">
                     <h1 id="pageTitle">Ana Panel</h1>
@@ -99,7 +85,7 @@
 
             <div class="announcement-ticker">
                 <i class="fa-solid fa-bullhorn"></i> 
-                <span id="liveAnnouncement"><strong>DUYURU:</strong> 5005 Services V2 altyapı çalışmaları başarıyla tamamlandı. Tüm sistemler aktif.</span>
+                <span id="liveAnnouncement"><strong>DUYURU:</strong> Henüz küresel bir duyuru yayınlanmadı.</span>
             </div>
 
             <div id="tab-dashboard" class="tab-content">
@@ -110,19 +96,18 @@
                     </div>
                     <div class="stat-card">
                         <span class="label">AKTİF KULLANICI</span>
-                        <div class="value purple-text">001</div>
+                        <div class="value purple-text" id="liveActiveUsers">001</div>
                     </div>
                     <div class="stat-card">
                         <span class="label">SİSTEM DURUMU</span>
                         <div class="value green-text">OPTIMIZED</div>
                     </div>
                 </div>
-
                 <div class="info-banner">
                     <div class="banner-icon"><i class="fa-solid fa-shield-halved"></i></div>
                     <div class="banner-text">
-                        <h3>Güvenlik Kontrolü</h3>
-                        <p>Tüm işlemleriniz uçtan uca kriptografik koruma altındadır. Key güvenliğinizi korumaya özen gösteriniz.</p>
+                        <h3>Canlı Ağ Bağlantısı</h3>
+                        <p>5005 merkez sunucularına gerçek zamanlı olarak bağlısınız. Aktif kullanıcılar anlık senkronize edilir.</p>
                     </div>
                 </div>
             </div>
@@ -134,40 +119,41 @@
                         <input type="text" maxlength="11" placeholder="11 haneli T.C. Kimlik numarasını girin...">
                         <button class="btn-query">SORGULA</button>
                     </div>
-                    <div class="query-result-placeholder">
-                        <i class="fa-solid fa-circle-info"></i> API entegrasyonu hazır. Sonuçlar burada listelenecektir.
-                    </div>
+                    <div class="query-result-placeholder"><i class="fa-solid fa-circle-info"></i> Sonuçlar burada listelenecektir.</div>
                 </div>
             </div>
-
             <div id="tab-gsm-tc" class="tab-content hidden">
                 <div class="query-box">
                     <label>GSM NUMARASI SORGULA</label>
                     <div class="query-input-group">
-                        <input type="text" placeholder="Telefon numarasını girin (Örn: 5xx...)">
+                        <input type="text" placeholder="Telefon numarasını girin...">
                         <button class="btn-query">SORGULA</button>
                     </div>
-                    <div class="query-result-placeholder">
-                        <i class="fa-solid fa-circle-info"></i> API entegrasyonu hazır. Sonuçlar burada listelenecektir.
+                    <div class="query-result-placeholder"><i class="fa-solid fa-circle-info"></i> Sonuçlar burada listelenecektir.</div>
+                </div>
+            </div>
+
+            <div id="tab-plaka-sorgu" class="tab-content hidden">
+                <div class="query-box">
+                    <label>ARAÇ PLAKASI SORGULA</label>
+                    <div class="query-input-group">
+                        <input type="text" id="plakaInput" placeholder="Örn: 34ABC123 veya 06AAA06" style="text-transform: uppercase;">
+                        <button class="btn-query" onclick="sorgulaPlaka()">SORGULA</button>
                     </div>
+                    <div class="query-result-placeholder" id="plakaResult"><i class="fa-solid fa-car"></i> Plaka verisi API üzerinden anlık çekilecektir.</div>
                 </div>
             </div>
 
             <div id="tab-owner-panel" class="tab-content hidden">
                 <div class="command-center">
-                    <div class="command-title">
-                        <i class="fa-solid fa-radiation"></i> GLOBAL DUYURU SİSTEMİ
-                    </div>
-                    <p class="command-desc">Buradan yazacağınız duyuru metni, paneldeki tüm kullanıcıların ekranında anlık olarak güncellenecektir.</p>
-                    
-                    <textarea id="announcementInput" placeholder="Tüm sistemde yayınlanacak duyuru mesajını girin..."></textarea>
-                    
+                    <div class="command-title"><i class="fa-solid fa-radiation"></i> GLOBAL DUYURU SİSTEMİ (GERÇEK ZAMANLI)</div>
+                    <p class="command-desc">Buradan yazacağınız duyuru metni, o anda panelde açık olan arkadaşınızın ekranına da saniyesinde düşer.</p>
+                    <textarea id="announcementInput" placeholder="Tüm sistemde anlık yayınlanacak duyuru mesajını girin..."></textarea>
                     <div style="display: flex; justify-content: flex-end;">
                         <button onclick="publishAnnouncement()" class="btn-owner-submit">DUYURUYU YAYINLA</button>
                     </div>
                 </div>
             </div>
-
         </main>
     </div>
 
